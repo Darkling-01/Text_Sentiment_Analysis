@@ -56,21 +56,24 @@ token_list['message to examine'] = [remove_stopwords(text) for text in token_lis
 
 def remove_repeated_characters(token):
     repeat_pattern = re.compile(r'(\W*)(\w)\2(\w*)')
-    match_subtitutions = r'\1\2\3'  # creating 3 groups for a word to store in while going through every character in it
+    match_subtitutions = r'\1\2\3'  # creating 3 groups, used for the repeating word
 
+    # define a recursive function for repeated words
     def replace(old_word):
-        if wordnet.synsets(old_word):
+        if wordnet.synsets(old_word):   # check if word has a synset in wordnet
             return old_word
+        # Replace repeated characters with instance
         new_word = repeat_pattern.sub(match_subtitutions, old_word)
+        # Recursively call replace until no changes are made or if a synset is found
         return replace(new_word) if new_word != old_word else new_word
     # Apply replace functon to every word
     corrected_word = [replace(word) for word in token]
-    return corrected_word
+    return corrected_word   # return the list with the corrected words
 
 token_list['message to examine'] = [list(filter(None, remove_repeated_characters(token))) for token in
                                     token_list['message to examine']]
 
-# stem words from tokenized words
+# Stemming involves reducing words to their root or base form
 def stem_words(text):
     word_tokens = word_tokenize(text)
     stems = [stemmer.stem(word) for word in word_tokens]

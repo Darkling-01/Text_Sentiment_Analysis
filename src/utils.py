@@ -7,8 +7,10 @@ from sklearn import metrics     # used for evaluating the performance of ML mode
 # transform text data into numerical representation for ML models
 def build_feature_matrix(dataset, feature_type='frequency', ngram_range=(1, 1),
                          min_df=0.0, max_df=1.0):
-    feature_type = feature_type.lower().strip()     # removing leading and trailing whitespaces
+    # Convert feature_type to lowercase and strip leading/trailing whitespaces
+    feature_type = feature_type.lower().strip()
 
+    # Select appropriate vectorizer based on feature_type
     if feature_type == 'binary':
         vectorizer = CountVectorizer(binary=True, min_df=min_df, max_df=max_df,
                                      ngram_range=ngram_range)
@@ -27,7 +29,10 @@ def build_feature_matrix(dataset, feature_type='frequency', ngram_range=(1, 1),
 
     return vectorizer, feature_matrix
 
-
+"""
+ calculating performance metrics such as accuracy, precision, recall, and F1 score, 
+ which are commonly used to assess the performance of classification models.
+"""
 def display_evaluation_metrics(true_labels, predicted_labels, positive_class=1):
 
     print('Accuracy', np.round(metrics.accuracy_score(true_labels, predicted_labels), 2))
@@ -42,8 +47,11 @@ def display_evaluation_metrics(true_labels, predicted_labels, positive_class=1):
                                                 pos_label=positive_class, average='binary'), 2))
 
 def display_confusion_matrix(true_labels, predicted_labels, classes=None):
+    # If classes are not specified, default to [1, 0]
     if classes is None:
         classes = [1, 0]
+
+    # Compute confusion matrix
     cm = metrics.confusion_matrix(y_true=true_labels, y_pred=predicted_labels, labels=classes)
 
     # Create MultiIndex for both columns and index
